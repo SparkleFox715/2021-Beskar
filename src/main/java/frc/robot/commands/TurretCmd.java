@@ -10,28 +10,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants;
 import frc.robot.OI;
-import frc.robot.subsystems.DrivetrainSys;
+import frc.robot.subsystems.TurretSys;
 
-public class JoystickDriveCmd extends CommandBase {
-	private final DrivetrainSys drivetrainSys;
+public class TurretCmd extends CommandBase {
 	private final OI oi;
+	private final TurretSys turret;
 
-	public JoystickDriveCmd(DrivetrainSys drivetrainSys, OI oi) {
-		this.drivetrainSys = drivetrainSys;
-		addRequirements(drivetrainSys);
+	public TurretCmd(OI oi, TurretSys turret) {
 		this.oi = oi;
+		this.turret = turret;
+		addRequirements(turret);
 	}
 
 	@Override
-	public void execute() {
-		drivetrainSys.driveArcade(
-				-oi.getAxis(0, Constants.Axes.RIGHT_STICK_X),
-				oi.getAxis(0, Constants.Axes.LEFT_STICK_Y));
+	public void initialize() {
+		turret.setTurret(oi.getAxis(1, Constants.Axes.LEFT_STICK_X));
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		drivetrainSys.stopDrive();
+		turret.setTurret(0);
 	}
 
 	@Override

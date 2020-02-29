@@ -6,7 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -20,7 +19,7 @@ import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 public class DrivetrainSys extends SubsystemBase {
 	private final WPI_VictorSPX frontLeft, frontRight, backLeft, backRight;
@@ -37,7 +36,6 @@ public class DrivetrainSys extends SubsystemBase {
 
 		this.frontRight = new WPI_VictorSPX(Constants.FRONT_RIGHT_DRIVE_CAN);
 		frontRight.configFactoryDefault();
-		frontRight.setInverted(true);
 		frontRight.setNeutralMode(NeutralMode.Brake);
 
 		this.backLeft = new WPI_VictorSPX(Constants.BACK_LEFT_DRIVE_CAN);
@@ -45,7 +43,6 @@ public class DrivetrainSys extends SubsystemBase {
 		backLeft.setNeutralMode(NeutralMode.Brake);
 
 		this.backRight = new WPI_VictorSPX(Constants.BACK_RIGHT_DRIVE_CAN);
-		backRight.setInverted(true);
 		backRight.configFactoryDefault();
 		backRight.setNeutralMode(NeutralMode.Brake);
 
@@ -64,7 +61,7 @@ public class DrivetrainSys extends SubsystemBase {
 		drive.arcadeDrive(speed, rotation);
 	}
 
-	public void stopDrive() {
+	public void stop() {
 		drive.stopMotor();
 	}
 

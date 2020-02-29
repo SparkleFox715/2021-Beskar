@@ -26,16 +26,30 @@ public final class Constants {
 
 	public static final double WHEEL_DIAMETER = 0.10795;
 
-	public static final int FRONT_LEFT_DRIVE_CAN = 3;
-	public static final int BACK_LEFT_DRIVE_CAN = 4;
+	public static final int FRONT_LEFT_DRIVE_CAN = 2;
+	public static final int BACK_LEFT_DRIVE_CAN = 1;
 
-	public static final int FRONT_RIGHT_DRIVE_CAN = 1;
-	public static final int BACK_RIGHT_DRIVE_CAN = 2;
+	public static final int FRONT_RIGHT_DRIVE_CAN = 3;
+	public static final int BACK_RIGHT_DRIVE_CAN = 4;
 
-	public static final int RIGHT_DRIVE_CAN = 2;
+	public static final int TURRET_CAN = 5;
+	public static final int TOP_SHOOTER_CAN = 8;
+	public static final int BOTTOM_SHOOTER_CAN = 9;
+
+	public static final int INTAKE_WHEEL_CAN = 14;
+	public static final int INTAKE_PIVOT_CAN = 5;
+
+	public static final int LEFT_CIMBER_CAN = 11;
+	public static final int RIGHT_CLIMBER_CAN = 10;
+
+	public static final int LEFT_PISTON_ID = 4;
+	public static final int RIGHT_PISTON_ID = 5;
 
 	public static final double DEADZONE_VALUE = 0.01;
 	public static final int NUMBER_OF_CONTROLLERS = 2;
+
+	public static final int HOPPER_CAN = 12;
+	public static final int KICKER_CAN = 13;
 
 	public enum Axes {
 		LEFT_STICK_X(0), LEFT_STICK_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_STICK_X(4), RIGHT_STICK_Y(5);
@@ -52,8 +66,8 @@ public final class Constants {
 	}
 
 	public enum Buttons {
-		A_BUTTON(0), B_BUTTON(1), X_BUTTON(2), Y_BUTTON(3), LEFT_BUMPER(4), RIGHT_BUMPER(5), BACK_BUTTON(
-				6), START_BUTTON(7), LEFT_STICK(8), RIGHT_STICK(9);
+		A_BUTTON(1), B_BUTTON(2), X_BUTTON(3), Y_BUTTON(4), LEFT_BUMPER(5), RIGHT_BUMPER(6), BACK_BUTTON(
+				7), START_BUTTON(8), LEFT_STICK(9), RIGHT_STICK(10);
 
 		private final int value;
 
