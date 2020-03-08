@@ -6,12 +6,12 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import command.SubsystemBase;
 
 public class HopperSys extends SubsystemBase {
 	private final WPI_VictorSPX hopper;

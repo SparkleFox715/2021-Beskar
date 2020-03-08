@@ -9,24 +9,36 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.Axes;
 import frc.robot.Constants.Buttons;
 
+import command.button.Button;
+import command.button.JoystickButton;
+import command.button.POVButton;
+
 public class OI {
 	private final Joystick[] sticks;
 	private final Button[][] buttons;
+	private final Button[][] povButtons;
 
 	public OI() {
-		buttons = new JoystickButton[NUMBER_OF_CONTROLLERS][10]; // 10 buttons
+		buttons = new JoystickButton[NUMBER_OF_CONTROLLERS][10];
+		povButtons = new POVButton[NUMBER_OF_CONTROLLERS][8];
+
 		sticks = new Joystick[NUMBER_OF_CONTROLLERS];
 
 		for (int i = 0; i < NUMBER_OF_CONTROLLERS; i++) {
 			sticks[i] = new Joystick(i);
 			for (int j = 0; j < buttons[i].length; j++) {
 				buttons[i][j] = new JoystickButton(sticks[i], j);
+			}
+		}
+
+		for (int i = 0; i < NUMBER_OF_CONTROLLERS; i++) {
+			sticks[i] = new Joystick(i);
+			for (int j = 0; j < 8; j++) {
+				povButtons[i][j] = new POVButton(sticks[i], j * 45);
 			}
 		}
 	}
@@ -57,6 +69,8 @@ public class OI {
 
 	public double getAxis(int joystick, Axes axis) {
 		double value = sticks[joystick].getRawAxis(axis.getValue());
+
+		// Make y-axis up be positive
 		if (axis == Axes.LEFT_STICK_Y || axis == Axes.RIGHT_STICK_Y)
 			return deadzone(-value);
 		else
@@ -65,5 +79,12 @@ public class OI {
 
 	public Button getButton(int joystick, Buttons button) {
 		return buttons[joystick][button.getValue()];
+	}
+
+	public Button getPovButton(int joystick, int degree) {
+		if(degree % 45 != 0) {
+			throw new IllegalArgumentException("Expected a multiple of 45, got: " + degree);
+		}
+		return povButtons[joystick][degree / 45];
 	}
 }

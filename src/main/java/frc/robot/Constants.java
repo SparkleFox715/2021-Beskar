@@ -32,24 +32,30 @@ public final class Constants {
 	public static final int FRONT_RIGHT_DRIVE_CAN = 3;
 	public static final int BACK_RIGHT_DRIVE_CAN = 4;
 
-	public static final int TURRET_CAN = 5;
+	public static final int TURRET_CAN = 7;
 	public static final int TOP_SHOOTER_CAN = 8;
 	public static final int BOTTOM_SHOOTER_CAN = 9;
+	public static final SimpleMotorFeedforward SHOOTER_FEEDFORWARD = new SimpleMotorFeedforward(0.384, 0.116, 0.128);
+	public static final double SHOOTER_KP = 3.73;
+	public static final double SHOOTER_PID_TOLERANCE = 0.5;
 
 	public static final int INTAKE_WHEEL_CAN = 14;
 	public static final int INTAKE_PIVOT_CAN = 5;
 
-	public static final int LEFT_CIMBER_CAN = 11;
+	public static final int HOPPER_CAN = 12;
+	public static final int KICKER_CAN = 13;
+
+	public static final int LEFT_CLIMBER_CAN = 11;
 	public static final int RIGHT_CLIMBER_CAN = 10;
 
-	public static final int LEFT_PISTON_ID = 4;
-	public static final int RIGHT_PISTON_ID = 5;
+	public static final int LEFT_PISTON_FORWARD_ID = 2;
+	public static final int LEFT_PISTON_REVERSE_ID = 3;
+
+	public static final int RIGHT_PISTON_FORWARD_ID = 4;
+	public static final int RIGHT_PISTON_REVERSE_ID = 5;
 
 	public static final double DEADZONE_VALUE = 0.01;
 	public static final int NUMBER_OF_CONTROLLERS = 2;
-
-	public static final int HOPPER_CAN = 12;
-	public static final int KICKER_CAN = 13;
 
 	public enum Axes {
 		LEFT_STICK_X(0), LEFT_STICK_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_STICK_X(4), RIGHT_STICK_Y(5);

@@ -5,17 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands;
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2020 FRC Team 4639. All Rights Reserved.                     */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.subsystems.KickerSys;
 import frc.robot.subsystems.ShooterSys;
+
+import command.CommandBase;
 
 public class SpoolShooterCmd extends CommandBase {
 	private final ShooterSys shooter;
@@ -29,8 +22,9 @@ public class SpoolShooterCmd extends CommandBase {
 
 	@Override
 	public void initialize() {
-		shooter.setShooter(1);
-		kicker.setKicker(0.8);
+		// code expects rps but rpm is easier to use
+		shooter.setShooter(3500.0 / 60.0);
+		kicker.setKicker(1.0);
 	}
 
 	@Override

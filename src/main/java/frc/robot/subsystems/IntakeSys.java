@@ -6,28 +6,44 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import command.SubsystemBase;
+
 public class IntakeSys extends SubsystemBase {
-	private final WPI_VictorSPX intakeWheel, intakePivot;
+	private final WPI_VictorSPX intakeWheel;
+	private final WPI_TalonSRX intakePivot;
+
+	private boolean isUp = true;
 
 	public IntakeSys() {
 		this.intakeWheel = new WPI_VictorSPX(Constants.INTAKE_WHEEL_CAN);
 		intakeWheel.configFactoryDefault();
 		intakeWheel.setNeutralMode(NeutralMode.Brake);
 
-		this.intakePivot = new WPI_VictorSPX(Constants.INTAKE_PIVOT_CAN);
+		this.intakePivot = new WPI_TalonSRX(Constants.INTAKE_PIVOT_CAN);
 		intakePivot.configFactoryDefault();
+		intakePivot.configContinuousCurrentLimit(10);
+		intakePivot.setInverted(InvertType.InvertMotorOutput);
+		intakePivot.setSensorPhase(true);
 		intakePivot.setNeutralMode(NeutralMode.Brake);
+	}
+
+	private double getDegrees() {
+		return intakePivot.getSelectedSensorPosition() / 4096.0 + 90;
 	}
 
 	public void setIntake(double num) {
 		intakeWheel.set(num);
+	}
+
+	public void setPivot(double num) {
+		intakePivot.set(num);
 	}
 
 	@Override

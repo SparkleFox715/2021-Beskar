@@ -6,24 +6,28 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import command.SubsystemBase;
 
 public class TurretSys extends SubsystemBase {
-	private final WPI_VictorSPX turret;
+	private final WPI_TalonSRX turret;
 
 	public TurretSys() {
-		this.turret = new WPI_VictorSPX(Constants.TURRET_CAN);
+		this.turret = new WPI_TalonSRX(Constants.TURRET_CAN);
 		turret.configFactoryDefault();
 		turret.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void setTurret(double power) {
 		turret.set(power);
+	}
+
+	public double getDegrees() {
+		return turret.getSelectedSensorPosition();
 	}
 
 	@Override

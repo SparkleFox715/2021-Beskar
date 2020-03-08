@@ -6,25 +6,21 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import frc.robot.Constants;
-import frc.robot.OI;
 import frc.robot.subsystems.TurretSys;
 
-public class TurretCmd extends CommandBase {
-	private final OI oi;
+import command.CommandBase;
+
+public class Turret90Cmd extends CommandBase {
 	private final TurretSys turret;
 
-	public TurretCmd(OI oi, TurretSys turret) {
-		this.oi = oi;
+	public Turret90Cmd(TurretSys turret) {
 		this.turret = turret;
 		addRequirements(turret);
 	}
 
 	@Override
 	public void initialize() {
-		turret.setTurret(oi.getAxis(1, Constants.Axes.LEFT_STICK_X));
+		turret.setTurret(0.3);
 	}
 
 	@Override
@@ -34,6 +30,6 @@ public class TurretCmd extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return turret.getDegrees() > 11200;
 	}
 }

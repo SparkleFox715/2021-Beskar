@@ -7,12 +7,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
@@ -20,6 +18,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import command.SubsystemBase;
 
 public class DrivetrainSys extends SubsystemBase {
 	private final WPI_VictorSPX frontLeft, frontRight, backLeft, backRight;
@@ -41,16 +41,24 @@ public class DrivetrainSys extends SubsystemBase {
 		this.backLeft = new WPI_VictorSPX(Constants.BACK_LEFT_DRIVE_CAN);
 		backLeft.configFactoryDefault();
 		backLeft.setNeutralMode(NeutralMode.Brake);
+		backLeft.follow(frontLeft);
 
 		this.backRight = new WPI_VictorSPX(Constants.BACK_RIGHT_DRIVE_CAN);
 		backRight.configFactoryDefault();
 		backRight.setNeutralMode(NeutralMode.Brake);
+		backRight.follow(frontRight);
 
 		this.odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getYaw()));
 
-		this.drive = new DifferentialDrive(new SpeedControllerGroup(frontLeft, backLeft),
-				new SpeedControllerGroup(frontRight, backRight));
+		this.drive = new DifferentialDrive(frontLeft, frontRight);
 		drive.setSafetyEnabled(false);
+	}
+
+	public void setNeutralMode(NeutralMode mode) {
+		frontLeft.setNeutralMode(mode);
+		backLeft.setNeutralMode(mode);
+		frontRight.setNeutralMode(mode);
+		backRight.setNeutralMode(mode);
 	}
 
 	public Pose2d getCurrentPose() {

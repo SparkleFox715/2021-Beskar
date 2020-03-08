@@ -9,18 +9,13 @@ package frc.robot;
 import static frc.robot.Constants.Buttons;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 
-import frc.robot.commands.DriveCmd;
-import frc.robot.commands.IntakeBallsCmd;
-import frc.robot.commands.KickerCmd;
 import frc.robot.commands.PushBallsCmd;
 import frc.robot.commands.SpoolShooterCmd;
-import frc.robot.commands.TurretCmd;
+import frc.robot.commands.Turret90Cmd;
 import frc.robot.subsystems.ClimberSys;
 import frc.robot.subsystems.DrivetrainSys;
 import frc.robot.subsystems.HopperSys;
@@ -28,6 +23,13 @@ import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.KickerSys;
 import frc.robot.subsystems.ShooterSys;
 import frc.robot.subsystems.TurretSys;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import command.Command;
+import command.ExecuteEndCommand;
+import command.InstantCommand;
+import command.ParallelCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -59,18 +61,40 @@ public class RobotContainer {
 
 		m_climber = new ClimberSys();
 		m_climber.setDefaultCommand(
-				new RunCommand(() -> m_climber.setClimber(m_oi.getAxis(1, Constants.Axes.RIGHT_STICK_X)), m_climber)
-						.andThen(() -> m_climber.setClimber(0), m_climber));
+				new ExecuteEndCommand(() -> m_climber.setClimber(m_oi.getAxis(1, Constants.Axes.RIGHT_STICK_Y)),
+						() -> m_climber.setClimber(0), m_climber));
+		m_climber.setPistons(DoubleSolenoid.Value.kReverse);
 
 		m_drive = new DrivetrainSys();
-		m_drive.setDefaultCommand(new DriveCmd(m_oi, m_drive));
+		m_drive.setDefaultCommand(
+				new ExecuteEndCommand(() -> m_drive.driveArcade(m_oi.getAxis(0, Constants.Axes.LEFT_STICK_Y),
+						m_oi.getAxis(0, Constants.Axes.RIGHT_STICK_X)), m_drive::stop, m_drive));
+
+		m_hopper = new HopperSys();
 
 		m_intake = new IntakeSys();
-		m_hopper = new HopperSys();
+		m_intake.setDefaultCommand(new ExecuteEndCommand(() -> {
+			if (m_oi.getAxis(1, Constants.Axes.RIGHT_TRIGGER) > 0) {
+				m_hopper.setHopper(-0.2);
+				m_intake.setIntake(0.5);
+			} else if (m_oi.getAxis(1, Constants.Axes.LEFT_TRIGGER) > 0) {
+				m_hopper.setHopper(0);
+				m_intake.setIntake(-0.5);
+			} else {
+				m_hopper.setHopper(0);
+				m_intake.setIntake(0);
+			}
+		}, () -> {
+			m_hopper.setHopper(0);
+			m_intake.setIntake(0);
+		}, m_intake, m_hopper));
+
 		m_shooter = new ShooterSys();
 		m_kicker = new KickerSys();
 		m_turret = new TurretSys();
-		m_turret.setDefaultCommand(new TurretCmd(m_oi, m_turret));
+		m_turret.setDefaultCommand(
+				new ExecuteEndCommand(() -> m_turret.setTurret(m_oi.getAxis(1, Constants.Axes.LEFT_STICK_X) * 0.5),
+						() -> m_turret.setTurret(0), m_turret));
 
 		configureButtonBindings();
 	}
@@ -79,22 +103,30 @@ public class RobotContainer {
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by instantiating a {@link GenericHID} or one of its subclasses
 	 * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-	 * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+	 * passing it to a {@link command.button.JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		// Extend the climber pistons
-		m_oi.getButton(1, Buttons.Y_BUTTON).whileHeld(new InstantCommand(() -> m_climber.setPistons(true), m_climber));
-		m_oi.getButton(1, Buttons.B_BUTTON).whileHeld(new InstantCommand(() -> m_climber.setPistons(false), m_climber));
+		// Bring intake up
+		m_oi.getPovButton(1, 0)
+				.whileHeld(new ExecuteEndCommand(() -> m_intake.setPivot(0.7), () -> m_intake.setPivot(0), m_intake));
 
-		// Intake stuff
-		m_oi.getButton(1, Buttons.X_BUTTON).whileHeld(new IntakeBallsCmd(m_hopper, m_intake));
+		// Bring intake down
+		m_oi.getPovButton(1, 180)
+				.whileHeld(new ExecuteEndCommand(() -> m_intake.setPivot(-0.5), () -> m_intake.setPivot(0), m_intake));
+
+		// Extend the climber pistons
+		m_oi.getButton(1, Buttons.Y_BUTTON)
+				.whileHeld(new InstantCommand(() -> m_climber.setPistons(DoubleSolenoid.Value.kForward), m_climber));
+		m_oi.getButton(1, Buttons.A_BUTTON)
+				.whileHeld(new InstantCommand(() -> m_climber.setPistons(DoubleSolenoid.Value.kReverse), m_climber));
 
 		// Move kicker wheel back to clear ball and then spool the shooter
-		m_oi.getButton(1, Buttons.A_BUTTON)
-				.whileHeld(new KickerCmd(m_kicker).withTimeout(0.2).andThen(new SpoolShooterCmd(m_shooter, m_kicker)));
+		m_oi.getButton(1, Buttons.X_BUTTON)
+				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
+						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker)));
 
 		// Use the kicker to push the balls in
-		m_oi.getButton(0, Buttons.X_BUTTON).whileHeld(new PushBallsCmd(m_hopper, m_intake));
+		m_oi.getButton(0, Buttons.X_BUTTON).whileHeld(new PushBallsCmd(m_hopper, m_intake, m_shooter));
 	}
 
 	/**
@@ -103,6 +135,15 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return new ParallelCommandGroup(
+				new ExecuteEndCommand(() -> m_drive.driveArcade(-0.5, 0), () -> m_drive.driveArcade(0, 0), m_drive)
+						.withTimeout(1.5),
+				new Turret90Cmd(m_turret)
+		).andThen(new ParallelCommandGroup(new SpoolShooterCmd(m_shooter, m_kicker),
+				new PushBallsCmd(m_hopper, m_intake, m_shooter)).withTimeout(7));
+	}
+
+	public void setDriveNeutralMode(NeutralMode mode) {
+		m_drive.setNeutralMode(mode);
 	}
 }
