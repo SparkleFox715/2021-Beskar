@@ -13,17 +13,19 @@ import command.CommandBase;
 public class SpoolShooterCmd extends CommandBase {
 	private final ShooterSys shooter;
 	private final KickerSys kicker;
+	private final double rpm;
 
-	public SpoolShooterCmd(ShooterSys shooter, KickerSys kicker) {
+	public SpoolShooterCmd(ShooterSys shooter, KickerSys kicker, double rpm) {
 		this.shooter = shooter;
 		this.kicker = kicker;
 		addRequirements(shooter, kicker);
+		this.rpm = rpm;
 	}
 
 	@Override
 	public void initialize() {
 		// code expects rps but rpm is easier to use
-		shooter.setShooter(3500.0 / 60.0);
+		shooter.setShooter(rpm / 60.0);
 		kicker.setKicker(1.0);
 	}
 

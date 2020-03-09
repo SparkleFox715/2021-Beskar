@@ -8,11 +8,13 @@ package frc.robot;
 
 import static frc.robot.Constants.Buttons;
 
+import command.WaitCommand;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 
+import frc.robot.commands.ManualDriveCmd;
 import frc.robot.commands.PushBallsCmd;
 import frc.robot.commands.SpoolShooterCmd;
 import frc.robot.commands.Turret90Cmd;
@@ -66,9 +68,7 @@ public class RobotContainer {
 		m_climber.setPistons(DoubleSolenoid.Value.kReverse);
 
 		m_drive = new DrivetrainSys();
-		m_drive.setDefaultCommand(
-				new ExecuteEndCommand(() -> m_drive.driveArcade(m_oi.getAxis(0, Constants.Axes.LEFT_STICK_Y),
-						m_oi.getAxis(0, Constants.Axes.RIGHT_STICK_X)), m_drive::stop, m_drive));
+		m_drive.setDefaultCommand(new ManualDriveCmd(m_drive, m_oi));
 
 		m_hopper = new HopperSys();
 
@@ -123,7 +123,12 @@ public class RobotContainer {
 		// Move kicker wheel back to clear ball and then spool the shooter
 		m_oi.getButton(1, Buttons.X_BUTTON)
 				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
-						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker)));
+						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker, 3800)));
+
+		m_oi.getButton(1, Buttons.B_BUTTON)
+				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
+						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker, 4300)));
+
 
 		// Use the kicker to push the balls in
 		m_oi.getButton(0, Buttons.X_BUTTON).whileHeld(new PushBallsCmd(m_hopper, m_intake, m_shooter));
@@ -136,10 +141,11 @@ public class RobotContainer {
 	 */
 	public Command getAutonomousCommand() {
 		return new ParallelCommandGroup(
-				new ExecuteEndCommand(() -> m_drive.driveArcade(-0.5, 0), () -> m_drive.driveArcade(0, 0), m_drive)
+				new ExecuteEndCommand(() -> m_drive.arcadeDrive(-0.5, 0), () -> m_drive.arcadeDrive(0, 0), m_drive)
 						.withTimeout(1.5),
-				new Turret90Cmd(m_turret)
-		).andThen(new ParallelCommandGroup(new SpoolShooterCmd(m_shooter, m_kicker),
+				new Turret90Cmd(m_turret),
+				new WaitCommand(5)
+		).andThen(new ParallelCommandGroup(new SpoolShooterCmd(m_shooter, m_kicker, 3800),
 				new PushBallsCmd(m_hopper, m_intake, m_shooter)).withTimeout(7));
 	}
 

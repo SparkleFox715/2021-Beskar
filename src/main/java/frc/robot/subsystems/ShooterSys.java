@@ -55,6 +55,7 @@ public class ShooterSys extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		System.out.println(getSpeed() + " " + speedDesired);
 		if (speedDesired == 0) {
 			pid.reset();
 			topShooter.set(0);
