@@ -9,17 +9,18 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import command.SubsystemBase;
 
 public class KickerSys extends SubsystemBase {
-	private final WPI_VictorSPX kicker;
+	private final WPI_TalonSRX kicker;
 
 	public KickerSys() {
-		this.kicker = new WPI_VictorSPX(Constants.KICKER_CAN);
+		this.kicker = new WPI_TalonSRX(Constants.KICKER_CAN);
 		kicker.configFactoryDefault();
 		kicker.setNeutralMode(NeutralMode.Coast);
+		kicker.setSensorPhase(true);
 	}
 
 	public void setKicker(double num) {

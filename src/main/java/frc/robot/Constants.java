@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+	public static final String TURRET_CAMERA_NAME = "";
 	public static final double MAX_COMMAND_VOLTAGE = 10;
 	public static final double TRACK_WIDTH = 0.55982;
 	public static final SimpleMotorFeedforward DRIVETRAIN_FEED_FORWARD = new SimpleMotorFeedforward(0.75, 0.11 * 39.37,

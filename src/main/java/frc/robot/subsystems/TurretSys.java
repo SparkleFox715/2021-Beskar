@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -20,6 +21,7 @@ public class TurretSys extends SubsystemBase {
 		this.turret = new WPI_TalonSRX(Constants.TURRET_CAN);
 		turret.configFactoryDefault();
 		turret.setNeutralMode(NeutralMode.Brake);
+		turret.setInverted(InvertType.InvertMotorOutput);
 	}
 
 	public void setTurret(double power) {

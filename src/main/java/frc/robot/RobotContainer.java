@@ -75,7 +75,7 @@ public class RobotContainer {
 		m_intake = new IntakeSys();
 		m_intake.setDefaultCommand(new ExecuteEndCommand(() -> {
 			if (m_oi.getAxis(1, Constants.Axes.RIGHT_TRIGGER) > 0) {
-				m_hopper.setHopper(-0.2);
+				m_hopper.setHopper(0.2);
 				m_intake.setIntake(0.5);
 			} else if (m_oi.getAxis(1, Constants.Axes.LEFT_TRIGGER) > 0) {
 				m_hopper.setHopper(0);

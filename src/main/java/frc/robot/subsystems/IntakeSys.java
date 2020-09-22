@@ -19,8 +19,6 @@ public class IntakeSys extends SubsystemBase {
 	private final WPI_VictorSPX intakeWheel;
 	private final WPI_TalonSRX intakePivot;
 
-	private boolean isUp = true;
-
 	public IntakeSys() {
 		this.intakeWheel = new WPI_VictorSPX(Constants.INTAKE_WHEEL_CAN);
 		intakeWheel.configFactoryDefault();
@@ -29,8 +27,6 @@ public class IntakeSys extends SubsystemBase {
 		this.intakePivot = new WPI_TalonSRX(Constants.INTAKE_PIVOT_CAN);
 		intakePivot.configFactoryDefault();
 		intakePivot.configContinuousCurrentLimit(10);
-		intakePivot.setInverted(InvertType.InvertMotorOutput);
-		intakePivot.setSensorPhase(true);
 		intakePivot.setNeutralMode(NeutralMode.Brake);
 	}
 

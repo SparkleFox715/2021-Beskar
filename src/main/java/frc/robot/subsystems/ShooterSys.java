@@ -41,7 +41,7 @@ public class ShooterSys extends SubsystemBase {
 
 	private double getSpeed() {
 		// rotations per second
-		return topShooter.getSelectedSensorVelocity() / (4096.0 * 16.0 / 22.0) * 10;
+		return topShooter.getSelectedSensorVelocity() / (4096.0 * 16.0 / 36.0) * 10;
 	}
 
 	public boolean isAtSpeed() {
@@ -55,7 +55,6 @@ public class ShooterSys extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		System.out.println(getSpeed() + " " + speedDesired);
 		if (speedDesired == 0) {
 			pid.reset();
 			topShooter.set(0);
