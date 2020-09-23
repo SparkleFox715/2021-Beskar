@@ -6,12 +6,14 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands;
 
-import command.CommandBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.TurretSys;
+
+import command.CommandBase;
 
 public class VisionAimCmd extends CommandBase {
 	private final TurretSys turret;
@@ -20,20 +22,20 @@ public class VisionAimCmd extends CommandBase {
 	public VisionAimCmd(TurretSys turret) {
 		this.turret = turret;
 		addRequirements(turret);
-		NetworkTable chameleonTable = NetworkTableInstance.getDefault()
-				.getTable("chameleon-vision").getSubTable(Constants.TURRET_CAMERA_NAME);
+		NetworkTable chameleonTable = NetworkTableInstance.getDefault().getTable("chameleon-vision")
+				.getSubTable(Constants.TURRET_CAMERA_NAME);
 		this.yawEntry = chameleonTable.getEntry("yaw");
 	}
 
 	@Override
 	public void execute() {
-		double KpRot=-0.1;
-		double constantForce=0.05;
-		double angleTolerance=5;//Deadzone for the angle control loop
+		double KpRot = -0.1;
+		double constantForce = 0.05;
+		double angleTolerance = 5;// Deadzone for the angle control loop
 
-		double rotationError= yawEntry.getDouble(0.0);
-		if(rotationError>angleTolerance)
-			turret.setTurret(KpRot*rotationError+constantForce);
+		double rotationError = yawEntry.getDouble(0.0);
+		if (rotationError > angleTolerance)
+			turret.setTurret(KpRot * rotationError + constantForce);
 		else
 			turret.setTurret(0);
 	}

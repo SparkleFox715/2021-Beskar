@@ -8,7 +8,6 @@ package frc.robot;
 
 import static frc.robot.Constants.Buttons;
 
-import command.WaitCommand;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -32,6 +31,7 @@ import command.Command;
 import command.ExecuteEndCommand;
 import command.InstantCommand;
 import command.ParallelCommandGroup;
+import command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -75,11 +75,16 @@ public class RobotContainer {
 		m_intake = new IntakeSys();
 		m_intake.setDefaultCommand(new ExecuteEndCommand(() -> {
 			if (m_oi.getAxis(1, Constants.Axes.RIGHT_TRIGGER) > 0) {
-				m_hopper.setHopper(0.2);
+				m_hopper.setHopper(-0.2);
 				m_intake.setIntake(0.5);
 			} else if (m_oi.getAxis(1, Constants.Axes.LEFT_TRIGGER) > 0) {
 				m_hopper.setHopper(0);
 				m_intake.setIntake(-0.5);
+				// } else if(m_oi.getButton(1, Constants.Buttons.RIGHT_BUMPER)) {
+				// ///ksbflwglwrglgblwg
+				// m_hopper.setHopper(0);
+				// m_intake.setIntake(0);
+				// }
 			} else {
 				m_hopper.setHopper(0);
 				m_intake.setIntake(0);
@@ -110,6 +115,9 @@ public class RobotContainer {
 		m_oi.getPovButton(1, 0)
 				.whileHeld(new ExecuteEndCommand(() -> m_intake.setPivot(0.7), () -> m_intake.setPivot(0), m_intake));
 
+		// Run Hopper In
+		m_oi.getButton(1, Buttons.RIGHT_BUMPER).whileHeld(new InstantCommand(() -> m_hopper.setHopper(0.2), m_hopper));
+
 		// Bring intake down
 		m_oi.getPovButton(1, 180)
 				.whileHeld(new ExecuteEndCommand(() -> m_intake.setPivot(-0.5), () -> m_intake.setPivot(0), m_intake));
@@ -129,7 +137,6 @@ public class RobotContainer {
 				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
 						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker, 4300)));
 
-
 		// Use the kicker to push the balls in
 		m_oi.getButton(0, Buttons.X_BUTTON).whileHeld(new PushBallsCmd(m_hopper, m_intake, m_shooter));
 	}
@@ -143,10 +150,9 @@ public class RobotContainer {
 		return new ParallelCommandGroup(
 				new ExecuteEndCommand(() -> m_drive.arcadeDrive(-0.5, 0), () -> m_drive.arcadeDrive(0, 0), m_drive)
 						.withTimeout(1.5),
-				new Turret90Cmd(m_turret),
-				new WaitCommand(5)
-		).andThen(new ParallelCommandGroup(new SpoolShooterCmd(m_shooter, m_kicker, 3800),
-				new PushBallsCmd(m_hopper, m_intake, m_shooter)).withTimeout(7));
+				new Turret90Cmd(m_turret), new WaitCommand(5))
+						.andThen(new ParallelCommandGroup(new SpoolShooterCmd(m_shooter, m_kicker, 3800),
+								new PushBallsCmd(m_hopper, m_intake, m_shooter)).withTimeout(7));
 	}
 
 	public void setDriveNeutralMode(NeutralMode mode) {

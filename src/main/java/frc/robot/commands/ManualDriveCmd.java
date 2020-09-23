@@ -6,11 +6,13 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands;
 
-import command.CommandBase;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
+
 import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.subsystems.DrivetrainSys;
+
+import command.CommandBase;
 
 public class ManualDriveCmd extends CommandBase {
 	private final DrivetrainSys drive;
@@ -27,10 +29,8 @@ public class ManualDriveCmd extends CommandBase {
 
 	@Override
 	public void execute() {
-		drive.arcadeDrive(
-				speedLimiter.calculate(oi.getAxis(0, Constants.Axes.LEFT_STICK_Y)),
-				rotationLimiter.calculate(oi.getAxis(0, Constants.Axes.RIGHT_STICK_X))
-		);
+		drive.arcadeDrive(speedLimiter.calculate(oi.getAxis(0, Constants.Axes.LEFT_STICK_Y)),
+				rotationLimiter.calculate(oi.getAxis(0, Constants.Axes.RIGHT_STICK_X)));
 	}
 
 	@Override

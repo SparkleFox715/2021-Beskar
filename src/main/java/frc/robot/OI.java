@@ -82,7 +82,7 @@ public class OI {
 	}
 
 	public Button getPovButton(int joystick, int degree) {
-		if(degree % 45 != 0) {
+		if (degree % 45 != 0) {
 			throw new IllegalArgumentException("Expected a multiple of 45, got: " + degree);
 		}
 		return povButtons[joystick][degree / 45];
