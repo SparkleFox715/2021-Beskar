@@ -75,7 +75,7 @@ public class RobotContainer {
 		m_intake = new IntakeSys();
 		m_intake.setDefaultCommand(new ExecuteEndCommand(() -> {
 			if (m_oi.getAxis(1, Constants.Axes.RIGHT_TRIGGER) > 0) {
-				m_hopper.setHopper(-0.2);
+				m_hopper.setHopper(0.0);
 				m_intake.setIntake(0.5);
 			} else if (m_oi.getAxis(1, Constants.Axes.LEFT_TRIGGER) > 0) {
 				m_hopper.setHopper(0);
@@ -116,7 +116,8 @@ public class RobotContainer {
 				.whileHeld(new ExecuteEndCommand(() -> m_intake.setPivot(0.7), () -> m_intake.setPivot(0), m_intake));
 
 		// Run Hopper In
-		m_oi.getButton(1, Buttons.RIGHT_BUMPER).whileHeld(new InstantCommand(() -> m_hopper.setHopper(0.2), m_hopper));
+		m_oi.getButton(1, Buttons.RIGHT_BUMPER).whileHeld(new InstantCommand(() -> m_hopper.setHopper(0.5), m_hopper));
+		m_oi.getButton(1, Buttons.RIGHT_BUMPER).whileHeld(new InstantCommand(() -> m_intake.setIntake(0.5), m_intake));
 
 		// Bring intake down
 		m_oi.getPovButton(1, 180)
@@ -130,12 +131,14 @@ public class RobotContainer {
 
 		// Move kicker wheel back to clear ball and then spool the shooter
 		m_oi.getButton(1, Buttons.X_BUTTON)
-				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
+				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(0), () -> m_kicker.setKicker(0), m_kicker)
 						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker, 3800)));
 
 		m_oi.getButton(1, Buttons.B_BUTTON)
 				.whileHeld(new ExecuteEndCommand(() -> m_kicker.setKicker(-0.5), () -> m_kicker.setKicker(0), m_kicker)
 						.withTimeout(0.1).andThen(new SpoolShooterCmd(m_shooter, m_kicker, 4300)));
+		m_oi.getButton(1, Buttons.B_BUTTON).whileHeld(new InstantCommand(() -> m_hopper.setHopper(-0.5), m_hopper));
+		m_oi.getButton(1, Buttons.B_BUTTON).whileHeld(new InstantCommand(() -> m_intake.setIntake(-0.5), m_intake));
 
 		// Use the kicker to push the balls in
 		m_oi.getButton(0, Buttons.X_BUTTON).whileHeld(new PushBallsCmd(m_hopper, m_intake, m_shooter));

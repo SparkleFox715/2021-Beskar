@@ -29,7 +29,7 @@ public class ManualDriveCmd extends CommandBase {
 
 	@Override
 	public void execute() {
-		drive.arcadeDrive(speedLimiter.calculate(oi.getAxis(0, Constants.Axes.LEFT_STICK_Y)),
+		drive.arcadeDrive(speedLimiter.calculate(oi.getAxis(0, Constants.Axes.LEFT_STICK_Y)) * (0.6),
 				rotationLimiter.calculate(oi.getAxis(0, Constants.Axes.RIGHT_STICK_X)));
 	}
 
