@@ -16,7 +16,7 @@ import java.util.WeakHashMap;
  * to groups to ensure those commands are not also used independently, which can
  * result in inconsistent command state and unpredictable execution.
  */
-public abstract class CommandGroupBase extends CommandBase implements Command {
+public abstract class CommandGroupBase extends CommandBase {
 	private static final Set<Command> m_groupedCommands = Collections.newSetFromMap(new WeakHashMap<>());
 
 	static void registerGroupedCommands(Command... commands) {
