@@ -37,7 +37,8 @@ public class ManualDriveCmd extends CommandBase {
 			reduceSpeed = 1.0;
 
 		drive.arcadeDrive(speedLimiter.calculate(oi.getAxis(0, Constants.Axes.LEFT_STICK_Y)) * reduceSpeed,
-				rotationLimiter.calculate(oi.getAxis(0, Constants.Axes.RIGHT_STICK_X)));
+				rotationLimiter.calculate(oi.getAxis(0, Constants.Axes.RIGHT_STICK_X))
+						* Constants.ROTATION_SENSITIVITY);
 	}
 
 	@Override
