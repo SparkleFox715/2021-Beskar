@@ -23,6 +23,7 @@ import frc.robot.subsystems.HopperSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.KickerSys;
 import frc.robot.subsystems.ShooterSys;
+import frc.robot.subsystems.ShroudSys;
 import frc.robot.subsystems.TurretSys;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -48,6 +49,7 @@ public class RobotContainer {
 	private final ShooterSys m_shooter;
 	private final KickerSys m_kicker;
 	private final TurretSys m_turret;
+	private final ShroudSys m_shroud;
 
 	private final OI m_oi;
 	private final Compressor m_compressor;
@@ -62,10 +64,12 @@ public class RobotContainer {
 		m_oi = new OI();
 
 		m_climber = new ClimberSys();
-		m_climber.setDefaultCommand(
-				new ExecuteEndCommand(() -> m_climber.setClimber(m_oi.getAxis(1, Constants.Axes.RIGHT_STICK_Y)),
-						() -> m_climber.setClimber(0), m_climber));
-		m_climber.setPistons(DoubleSolenoid.Value.kReverse);
+		// Climber commands removed. RIGHT STICK is now used for the Shroud
+		// m_climber.setDefaultCommand(
+		// new ExecuteEndCommand(() -> m_climber.setClimber(m_oi.getAxis(1,
+		// Constants.Axes.RIGHT_STICK_Y)),
+		// () -> m_climber.setClimber(0), m_climber));
+		// m_climber.setPistons(DoubleSolenoid.Value.kReverse);
 
 		m_drive = new DrivetrainSys();
 		m_drive.setDefaultCommand(new ManualDriveCmd(m_drive, m_oi));
@@ -101,6 +105,10 @@ public class RobotContainer {
 				new ExecuteEndCommand(() -> m_turret.setTurret(m_oi.getAxis(1, Constants.Axes.LEFT_STICK_X) * 0.5),
 						() -> m_turret.setTurret(0), m_turret));
 
+		m_shroud = new ShroudSys();
+		m_shroud.setDefaultCommand(
+				new ExecuteEndCommand(() -> m_shroud.setShroud(m_oi.getAxis(1, Constants.Axes.RIGHT_STICK_Y) * 0.3),
+						() -> m_shroud.setShroud(0), m_shroud));
 		configureButtonBindings();
 	}
 

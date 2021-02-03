@@ -33,6 +33,7 @@ public class ClimberSys extends SubsystemBase {
 		leftClimber.configForwardSoftLimitEnable(true);
 		leftClimber.configForwardSoftLimitThreshold(20_000);
 
+		// Resuing Motor Controller for Shroud
 		this.rightClimber = new WPI_TalonSRX(Constants.RIGHT_CLIMBER_CAN);
 		rightClimber.setInverted(InvertType.FollowMaster);
 		rightClimber.setSensorPhase(true);
