@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 
+import edu.wpi.first.wpilibj.Encoder;
+
 import frc.robot.commands.ManualDriveCmd;
 import frc.robot.commands.PushBallsCmd;
 import frc.robot.commands.SpoolShooterCmd;
@@ -53,7 +55,7 @@ public class RobotContainer {
 
 	private final OI m_oi;
 	private final Compressor m_compressor;
-
+	public Encoder encoder1 = new Encoder(1,2,3);
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
